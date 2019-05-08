@@ -28,10 +28,11 @@ app.post('/hook', (req, res) => {
             if (message.message.text) {
                 const text = message.message.text; 
                 console.log(text); 
-                sendMessage(senderId, text); 
+                sendMessage(senderId, "Tao la bot day " + text); 
             }
         });
     });
+    res.status(200).send("OK");
 })
 
 function sendMessage(senderId, text) {
@@ -39,7 +40,7 @@ function sendMessage(senderId, text) {
         url: 'https://graph.facebook.com/v3.3/me/messages', 
         method: 'POST', 
         qs : {
-            accessToken: 'EAAJkP0LZByAABAJKZAxhdCv7KQugcBiwDEBDPulhDtQSiSZCSLvxBW7v1QgSShnjeSS9KtOgNHjbGrPydZCHyNKNpQg9ZCyMSOuDqxotFLMHLZAGCle3Gq8CeelFdBM89vBk4nU0s3frU8gtEqhgv3l0saVKP4bSeFsM5UbDi5ZBQZDZD',
+            access_token: 'EAAJkP0LZByAABAJKZAxhdCv7KQugcBiwDEBDPulhDtQSiSZCSLvxBW7v1QgSShnjeSS9KtOgNHjbGrPydZCHyNKNpQg9ZCyMSOuDqxotFLMHLZAGCle3Gq8CeelFdBM89vBk4nU0s3frU8gtEqhgv3l0saVKP4bSeFsM5UbDi5ZBQZDZD',
         }, 
         json: {
             recipient: {
