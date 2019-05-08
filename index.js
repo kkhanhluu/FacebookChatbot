@@ -31,13 +31,14 @@ app.post('/webhook', (req, res) => {
         messaging.forEach(message => {
             const senderId = message.sender.id; 
             if (message.message.text.includes('kinh te')) {
+                sendMessage(senderId, "Bạn xem các bài viết kinh tế hay ở đây nha"); 
                 crawler().then(links => {
-                    links.forEach(link => sendButtonMessage(senderId, message.message.text, link));
+                    links.forEach(link => sendGenericButtonMessage(senderId, link));
                 }).catch(e => console.log(e.message));
             }
             else {
                 console.log(message.message.text); 
-                sendMessage(senderId, "Tao la bot day " + message.message.text); 
+                sendMessage(senderId, "Tao là bot đây " + message.message.text); 
             }
         });
     });
@@ -65,20 +66,30 @@ function sendMessage(senderId, text) {
 
 
 // send replys by buttons back to users via facebook Rest API 
-function sendButtonMessage(senderId, text, link) {
+function sendGenericButtonMessage(senderId, text, link) {
     let messageData = {
         attachment: {
             type: "template",
             payload: {
-                template_type: "button",
-                text: link,
-                buttons: [
+                template_type: "generic",
+                "elements":[
                     {
-                        "type":"web_url",
-                        "url": link,
-                        "title":"Xem them"
-                    }
-                ]
+                     "title":"Welcome!",
+                     "subtitle":"We have the right hat for everyone.",
+                     "default_action": {
+                       "type": "web_url",
+                       "url": link,
+                       "webview_height_ratio": "tall",
+                     },
+                     "buttons":[
+                       {
+                         "type":"web_url",
+                         "url": link,
+                         "title":"Xem thêm"
+                       }             
+                     ]      
+                   }
+                 ]
             }
         }
     }; 
