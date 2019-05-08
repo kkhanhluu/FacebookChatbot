@@ -31,7 +31,7 @@ app.post('/webhook', (req, res) => {
         messaging.forEach(message => {
             const senderId = message.sender.id; 
             if (message.message.text.includes('kinh te')) {
-                const links = crawler(); 
+                const links = await crawler(); 
                 links.forEach(link => sendButtonMessage(senderId, message.message.text, link));
             }
             else {
