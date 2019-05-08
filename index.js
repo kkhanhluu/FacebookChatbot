@@ -30,7 +30,7 @@ app.post('/webhook', (req, res) => {
         const messaging = entry.messaging; 
         messaging.forEach(message => {
             const senderId = message.sender.id; 
-            if (message.message.text.contains('kinh te')) {
+            if (message.message.text.includes('kinh te')) {
                 const links = crawler(); 
                 sendMessage(senderId, links); 
             }
