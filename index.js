@@ -66,7 +66,7 @@ function sendMessage(senderId, text) {
 
 
 // send replys by buttons back to users via facebook Rest API 
-function sendGenericButtonMessage(senderId, text, link) {
+function sendGenericButtonMessage(senderId, link) {
     let messageData = {
         attachment: {
             type: "template",
