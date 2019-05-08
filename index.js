@@ -19,7 +19,7 @@ app.get('/webhook', (req, res) => {
     res.send('Error, wrong validation token'); 
 })
 
-app.post('/hook', (req, res) => {
+app.post('/webhook', (req, res) => {
     const entries = req.body.entry; 
     entries.forEach(entry => {
         const messaging = entry.messaging; 
