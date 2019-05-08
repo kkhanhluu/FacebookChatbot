@@ -24,15 +24,16 @@ app.get('/webhook', (req, res) => {
 })
 
 // when user sends messages to page, make a post request to webhook 
-app.post('/webhook', async function (req, res) {
+app.post('/webhook', (req, res) => {
     const entries = req.body.entry; 
     entries.forEach(entry => {
         const messaging = entry.messaging; 
         messaging.forEach(message => {
             const senderId = message.sender.id; 
             if (message.message.text.includes('kinh te')) {
-                const links = await crawler(); 
-                links.forEach(link => sendButtonMessage(senderId, message.message.text, link));
+                crawler().then(links => {
+                    links.forEach(link => sendButtonMessage(senderId, message.message.text, link));
+                }).catch(e => console.log(e.message));
             }
             else {
                 console.log(message.message.text); 
