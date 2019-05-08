@@ -24,7 +24,7 @@ app.get('/webhook', (req, res) => {
 })
 
 // when user sends messages to page, make a post request to webhook 
-app.post('/webhook', (req, res) => {
+app.post('/webhook', async function (req, res) {
     const entries = req.body.entry; 
     entries.forEach(entry => {
         const messaging = entry.messaging; 
