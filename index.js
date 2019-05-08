@@ -32,14 +32,18 @@ app.post('/webhook', (req, res) => {
             const senderId = message.sender.id; 
             if (message.message.text.includes('kinh te')) {
                 const links = crawler(); 
-                sendMessage(senderId, links); 
+                links.forEach(link => sendButtonMessage(senderId, message.message.text, link));
+            }
+            else {
+                console.log(message.message.text); 
+                sendMessage(senderId, "Tao la bot day " + message.message.text); 
             }
         });
     });
     res.status(200).send("OK");
 })
 
-// send replies back to user via facebook rest api 
+// send replies by messages back to user via facebook rest api 
 function sendMessage(senderId, text) {
     request({
         url: 'https://graph.facebook.com/v3.3/me/messages', 
@@ -58,6 +62,39 @@ function sendMessage(senderId, text) {
     });
 }
 
+
+// send replys by buttons back to users via facebook Rest API 
+function sendButtonMessage(senderId, text, link) {
+    let messageData = {
+        attachment: {
+            type: "template",
+            payload: {
+                template_type: "button",
+                text: link,
+                buttons: [
+                    {
+                        "type":"web_url",
+                        "url": link,
+                        "title":"Xem them"
+                    }
+                ]
+            }
+        }
+    }; 
+    request({
+        url: 'https://graph.facebook.com/v3.3/me/messages', 
+        method: 'POST', 
+        qs : {
+            access_token: 'EAAJkP0LZByAABAJKZAxhdCv7KQugcBiwDEBDPulhDtQSiSZCSLvxBW7v1QgSShnjeSS9KtOgNHjbGrPydZCHyNKNpQg9ZCyMSOuDqxotFLMHLZAGCle3Gq8CeelFdBM89vBk4nU0s3frU8gtEqhgv3l0saVKP4bSeFsM5UbDi5ZBQZDZD',
+        }, 
+        json: {
+            recipient: {
+                id: senderId
+              },
+              message: messageData
+        }
+    });
+}
 // crawler to craw articles from viet-studies
 async function crawler() {
     const url = "http://www.viet-studies.net/kinhte/kinhte.htm"; 
