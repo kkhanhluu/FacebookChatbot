@@ -64,6 +64,7 @@ async function crawler() {
     
     const links = await getLinks(url);  
     console.log(links); 
+    return links; 
 }
 
 async function getLinks(url) {
