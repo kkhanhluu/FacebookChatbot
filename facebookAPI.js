@@ -52,7 +52,7 @@ class FacebookAPI {
         }; 
         links.forEach(link => {
             const element = this.createElementFromLink(link);
-            messageData.attachment.payload.elements.add(element); 
+            messageData.attachment.payload.elements.push(element); 
         });
         this.sendGeneralMessage(senderId, messageData); 
     }

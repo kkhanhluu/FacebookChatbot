@@ -35,7 +35,7 @@ app.post('/webhook', (req, res) => {
                 facebookAPI.sendTextMessage(senderId, "Bạn xem các bài viết kinh tế hay ở đây nha");
                 
                 crawler.crawl().then(links => {
-                    facebookAPI.sendGenericTemplateButtonMessagesFromArrayLink(links); 
+                    facebookAPI.sendGenericTemplateButtonMessagesFromArrayLink(senderId, links); 
                 }).catch(e => console.log(e.message));
             }
             else {
