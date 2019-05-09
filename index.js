@@ -40,7 +40,7 @@ app.post('/webhook', (req, res) => {
             }
             else {
                 console.log(message.message.text);
-                sendMessage(senderId, "Tao là bot đây " + message.message.text);
+                facebookAPI.sendTextMessage(senderId, "Tao là bot đây " + message.message.text);
             }
         });
     });
