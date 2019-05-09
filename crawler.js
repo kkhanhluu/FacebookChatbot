@@ -5,7 +5,7 @@ class Crawler {
     async crawl() {
         const url = "http://www.viet-studies.net/kinhte/kinhte.htm";
     
-        const links = await getLinks(url);
+        const links = await this.getLinks(url);
         console.log(links);
         return links;
     }
