@@ -1,7 +1,7 @@
 "use strict"
 const request = require('request'); 
 
-export default class FacebookAPI {
+class FacebookAPI {
     constructor() {
         this.token = 'EAAJkP0LZByAABAJKZAxhdCv7KQugcBiwDEBDPulhDtQSiSZCSLvxBW7v1QgSShnjeSS9KtOgNHjbGrPydZCHyNKNpQg9ZCyMSOuDqxotFLMHLZAGCle3Gq8CeelFdBM89vBk4nU0s3frU8gtEqhgv3l0saVKP4bSeFsM5UbDi5ZBQZDZD'; 
         this.sendFacebookAPIURL = 'https://graph.facebook.com/v3.3/me/messages'; 
@@ -65,3 +65,6 @@ export default class FacebookAPI {
         this.sendGeneralMessage(senderId, messageData); 
     }
 }
+
+
+module.exports = new FacebookAPI();

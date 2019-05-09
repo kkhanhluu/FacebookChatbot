@@ -2,18 +2,15 @@
 const http = require('http');
 const bodyParser = require('body-parser');
 const express = require('express');
-const puppeteer = require('puppeteer');
-import FacebookAPI from './facebookAPI';  
-import Crawler from './crawler';
 
 // setup 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 const server = http.createServer(app);
-const facebookAPI = new FacebookAPI(); 
+const facebookAPI = require('./facebookAPI');
 // crawler to craw articles from viet-studies
-const crawler = new Crawler();
+const crawler = require('./crawler');
 
 // index
 app.get('/', (req, res) => {
@@ -38,7 +35,7 @@ app.post('/webhook', (req, res) => {
                 facebookAPI.sendTextMessage(senderId, "Bạn xem các bài viết kinh tế hay ở đây nha");
                 
                 crawler.crawl().then(links => {
-                    facebookAPI.sendGenericTemplateButtonMessagesFromArrayLink(link); 
+                    facebookAPI.sendGenericTemplateButtonMessagesFromArrayLink(links); 
                 }).catch(e => console.log(e.message));
             }
             else {

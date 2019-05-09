@@ -1,7 +1,7 @@
 "use strict"
 const puppeteer = require('puppeteer');
 
-export default class Crawler {
+class Crawler {
     async crawl() {
         const url = "http://www.viet-studies.net/kinhte/kinhte.htm";
     
@@ -25,3 +25,5 @@ export default class Crawler {
         return links;
     }
 }
+
+module.exports = new Crawler();
