@@ -23,7 +23,9 @@
     "fs": "0.0.1-security",
     "http": "0.0.0",
     "image-downloader": "^3.4.2",
+    "jsdom": "^15.0.0",
     "puppeteer": "^1.15.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "request-promise": "^4.2.4"
   }
 }

@@ -2,15 +2,15 @@
 const http = require('http');
 const bodyParser = require('body-parser');
 const express = require('express');
+const facebookAPI = require('./facebookAPI');
+// crawler to craw articles from viet-studies
+const crawler = require('./crawler');
 
 // setup 
 const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 const server = http.createServer(app);
-const facebookAPI = require('./facebookAPI');
-// crawler to craw articles from viet-studies
-const crawler = require('./crawler');
 
 // index
 app.get('/', (req, res) => {
@@ -31,16 +31,17 @@ app.post('/webhook', (req, res) => {
         const messaging = entry.messaging;
         messaging.forEach(message => {
             const senderId = message.sender.id;
-            if (message.message.text.includes('kinh te')) {
-                facebookAPI.sendTextMessage(senderId, "Bạn xem các bài viết kinh tế hay ở đây nha");
-                
-                crawler.crawl().then(links => {
-                    facebookAPI.sendGenericTemplateButtonMessagesFromArrayLink(senderId, links); 
-                }).catch(e => console.log(e.message));
-            }
-            else {
-                console.log(message.message.text);
-                facebookAPI.sendTextMessage(senderId, "Tao là bot đây " + message.message.text);
+            if (message.message) {
+                if (message.message.text.includes('kinh te')) {
+                    facebookAPI.sendTextMessage(senderId, "Bạn xem các bài viết kinh tế hay ở đây nha");
+                    
+                    crawler.crawl().then(links => {
+                        facebookAPI.sendGenericTemplateButtonMessagesFromArrayLink(senderId, links);
+                    }).catch(e => console.log(e.message));
+                }
+                else {
+                    facebookAPI.sendTextMessage(senderId, "Tao là bot đây " + message.message.text);
+                }
             }
         });
     });
@@ -51,3 +52,4 @@ app.set('port', process.env.PORT || 1337);
 server.listen(app.get('port'), () => {
     console.log(`Chat bot server listening at ${app.get('port')}`);
 });
+ 

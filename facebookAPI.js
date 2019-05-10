@@ -1,68 +1,76 @@
 "use strict"
-const request = require('request'); 
+const request = require('request');
+const util = require('./Utilities');
 
 class FacebookAPI {
     constructor() {
-        this.token = 'EAAJkP0LZByAABAJKZAxhdCv7KQugcBiwDEBDPulhDtQSiSZCSLvxBW7v1QgSShnjeSS9KtOgNHjbGrPydZCHyNKNpQg9ZCyMSOuDqxotFLMHLZAGCle3Gq8CeelFdBM89vBk4nU0s3frU8gtEqhgv3l0saVKP4bSeFsM5UbDi5ZBQZDZD'; 
-        this.sendFacebookAPIURL = 'https://graph.facebook.com/v3.3/me/messages'; 
+        this.token = 'EAAJkP0LZByAABAAWXdq0Q0hZAy2pzGUbJUesMQYXbTLeMFOrZCrSR9uN5CEfIOvdpjM3CiZCfmdYLnp0sep7VwQFjt1PTZAi1WmEODdKZBzSGnfoKoFHlViJHttZBPzH4kwht5o0Et53Na7SZAt29i8pERvEZBZCLvett5EAZC5ZCSMBrgZDZD';
+        this.sendFacebookAPIURL = 'https://graph.facebook.com/v3.3/me/messages';
     }
 
     sendGeneralMessage(senderId, messageData) {
         request({
-            url: this.sendFacebookAPIURL, 
-            method: 'POST', 
-            qs : {
+            url: this.sendFacebookAPIURL,
+            method: 'POST',
+            qs: {
                 access_token: this.token,
-            }, 
+            },
             json: {
                 recipient: {
                     id: senderId
-                  },
-                  message: messageData
+                },   
+                message: messageData
+            }  
+        }, (error, response, body) => {
+            if (error) {
+                console.log('Error sending message: ', error);
+            }
+            else if (response.body.error) {
+                console.log('Error: ', response.body.error);
             }
         });
     }
 
     createElementFromLink(link) {
+        const metadata = util.crawlMetaDataFromAnUrl(link); 
         return {
-            "default_action": {
-              "type": "web_url",
-              "url": link,
-              "webview_height_ratio": "tall",
-            },
-            "buttons":[
-              {
-                "type":"web_url",
-                "url": link,
-                "title":"Xem thêm"
-              }             
-            ]      
-          };
+            title: "Article",
+            subtitle: "economy",
+            item_url: link,   
+            "buttons": [
+                {
+                    "type": "web_url",
+                    "url": link,
+                    "title": "Xem thêm"
+                }
+            ]
+        };
     }
 
     sendGenericTemplateButtonMessagesFromArrayLink(senderId, links) {
+        let elements = []; 
+        links.slice(0, 10).forEach(link => {
+            const element = this.createElementFromLink(link);
+            elements.push(element);
+        });
         let messageData = {
             attachment: {
                 type: "template",
                 payload: {
                     template_type: "generic",
-                    "elements":[]
+                    elements: elements
                 }
             }
-        }; 
-        links.forEach(link => {
-            const element = this.createElementFromLink(link);
-            messageData.attachment.payload.elements.push(element); 
-        });
-        this.sendGeneralMessage(senderId, messageData); 
+        };
+        this.sendGeneralMessage(senderId, messageData);
     }
 
     // send replies by messages back to user via facebook rest api 
     sendTextMessage(senderId, text) {
         let messageData = {
-            text: text
-        }; 
-        this.sendGeneralMessage(senderId, messageData); 
+            text: text    
+        };
+        this.sendGeneralMessage(senderId, messageData);
     }
 }
 
