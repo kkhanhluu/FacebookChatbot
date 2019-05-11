@@ -18,9 +18,9 @@ class FacebookAPI {
             json: {
                 recipient: {
                     id: senderId
-                },   
+                },
                 message: messageData
-            }  
+            }
         }, (error, response, body) => {
             if (error) {
                 console.log('Error sending message: ', error);
@@ -31,12 +31,13 @@ class FacebookAPI {
         });
     }
 
-    createElementFromLink(link) {
-        const metadata = util.crawlMetaDataFromAnUrl(link); 
+    async createElementFromLink(link) {
+        const metadata = await util.crawlMetaDataFromAnUrl(link);
         return {
-            title: "Article",
-            subtitle: "economy",
-            item_url: link,   
+            title: metadata.title,
+            subtitle: metadata.subtitle,
+            image_url: metadata.imgUrl,
+            item_url: link,
             "buttons": [
                 {
                     "type": "web_url",
@@ -48,31 +49,63 @@ class FacebookAPI {
     }
 
     sendGenericTemplateButtonMessagesFromArrayLink(senderId, links) {
-        let elements = []; 
-        links.slice(0, 10).forEach(link => {
-            const element = this.createElementFromLink(link);
-            elements.push(element);
+        const arrayPromise = links.slice(0, 10).map(async (link) => {
+            return await this.createElementFromLink(link);
         });
-        let messageData = {
-            attachment: {
-                type: "template",
-                payload: {
-                    template_type: "generic",
-                    elements: elements
+        return Promise.all(arrayPromise).then(elements => {
+            let messageData = {
+                attachment: {
+                    type: "template",
+                    payload: {
+                        template_type: "generic",
+                        elements: elements
+                    }
                 }
-            }
-        };
-        this.sendGeneralMessage(senderId, messageData);
+            };
+            this.sendGeneralMessage(senderId, messageData);
+        });
     }
 
     // send replies by messages back to user via facebook rest api 
     sendTextMessage(senderId, text) {
         let messageData = {
-            text: text    
+            text: text
         };
         this.sendGeneralMessage(senderId, messageData);
     }
+
+    sendGenericButtonWithPostback(senderId) {
+        let messageData = {
+            "attachment": {
+                "type": "template",
+                "payload": {
+                    "template_type": "generic",
+                    "elements": [{
+                        "title": "Tôi có thể giúp gì cho bạn?",
+                        "subtitle": "Nhấn để trả lời.",
+                        "buttons": [
+                            {
+                                "type": "postback",
+                                "title": "Đọc báo",
+                                "payload": "articles",
+                            },
+                            {
+                                "type": "postback",
+                                "title": "Luyện tiếng anh",
+                                "payload": "questions",
+                            }, 
+                            {
+                                "type": "postback",
+                                "title": "Tác giả",
+                                "payload": "author",
+                            }
+                        ],
+                    }]
+                }
+            }
+        };
+        this.sendGeneralMessage(senderId, messageData); 
+    }
+
 }
-
-
 module.exports = new FacebookAPI();
