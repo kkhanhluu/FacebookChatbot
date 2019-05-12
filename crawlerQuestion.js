@@ -1,28 +1,28 @@
 const puppeteer = require('puppeteer');
-const fs = require('fs'); 
+const fs = require('fs');
 
 
 const categories = [
-    {subject: "noun", max: 143},
-    {subject: "articles", max: 116},
-    {subject: "spelling-error", max: 220},
-    {subject: "transformation-of-sentences", max: 99},
-    {subject: "common-errors", max: 823},
-    {subject: "idioms-and-phrases", max: 70},
-    {subject: "one-word-substitution", max: 100},
-    {subject: "sequence-of-sentences", max: 248},
-    {subject: "synonyms", max: 199},
-    {subject: "antonyms", max: 100},
-    {subject: "sentence-improvement", max: 239},
-    {subject: "voice", max: 87},
-    {subject: "choosing-appropriate-words", max: 144},
-    {subject: "narration", max: 60},
-    {subject: "pronoun", max: 185},
-    {subject: "adjective-and-determiners", max: 220},
-    {subject: "verb", max: 180},
-    {subject: "adverb", max: 161},
-    {subject: "conjunction", max: 132},
-    {subject: "preposition", max: 324},
+    { subject: "noun", max: 143 },
+    { subject: "articles", max: 116 },
+    { subject: "spelling-error", max: 220 },
+    { subject: "transformation-of-sentences", max: 99 },
+    { subject: "common-errors", max: 823 },
+    { subject: "idioms-and-phrases", max: 70 },
+    { subject: "one-word-substitution", max: 100 },
+    { subject: "sequence-of-sentences", max: 248 },
+    { subject: "synonyms", max: 199 },
+    { subject: "antonyms", max: 100 },
+    { subject: "sentence-improvement", max: 239 },
+    { subject: "voice", max: 87 },
+    { subject: "choosing-appropriate-words", max: 144 },
+    { subject: "narration", max: 60 },
+    { subject: "pronoun", max: 185 },
+    { subject: "adjective-and-determiners", max: 220 },
+    { subject: "verb", max: 180 },
+    { subject: "adverb", max: 161 },
+    { subject: "conjunction", max: 132 },
+    { subject: "preposition", max: 324 },
 ]
 async function crawl() {
     const browser = await puppeteer.launch();
@@ -33,6 +33,7 @@ async function crawl() {
     await page.click('input[type="submit"');
     await page.waitForNavigation();
     const cookies = await page.cookies();
+    // sequence of sentences xong 168
 
     let count = 1; 
     for (let j = 0; j < categories.length; j++) {
@@ -73,19 +74,19 @@ async function getQuestionAndChoices(browser, cookies, subject, pageNumber) {
     await page.goto(`https://www.justexam.in/chapter-wise-question-bank/${subject}-18/?&page=${pageNumber}`);
     const questionAndChoices = await page.evaluate(() => {
         return {
-            question: document.getElementsByTagName('b')[0].textContent, 
+            question: document.getElementsByTagName('b')[0].textContent,
             a: document.querySelector('input[value="a"]').parentNode.textContent.trim(),
             b: document.querySelector('input[value="b"]').parentNode.textContent.trim(),
             c: document.querySelector('input[value="c"]').parentNode.textContent.trim(),
-            d: document.querySelector('input[value="d"]').parentNode.textContent.trim(), 
+            d: document.querySelector('input[value="d"]').parentNode.textContent.trim(),
         }
-    }); 
-    await page.close(); 
-    return questionAndChoices; 
+    });
+    await page.close();
+    return questionAndChoices;
 }
 
 async function main() {
-    await crawl(); 
+    await crawl();
     // console.log(categories.reduce((acc, curr) => acc + curr.max, 0)); 
 }
 main(); 
